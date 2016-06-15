@@ -182,8 +182,8 @@ Modifications by Anurag since forking
 
 - Removed the looping part from airpi.py. After installing, please add the following line to crontab (`sudo crontab -e`) to crontab: `* * * * * sudo python ~/git/AirPi/airpi.py`
 - Disabled upload to Xively (set it as off in `outputs.cfg`)
-- Added facility to upload to InitialState.com (added `initialstate.py`). Please add your Buckt Key and API Key to `outputs.cfg`
+- Added facility to upload to InitialState.com (added `initialstate.py`). Please add your Bucket Key and Access Key to `outputs.cfg`
 - If you encounter "InsecurePlatformWarning: A true SSLContext object is not available...." execute the following commands
--- `sudo apt-get update`
--- `sudo apt-get install libffi-dev libssl-dev`
--- `sudo pip install requests[security]`
+  ```sudo apt-get update
+  sudo apt-get install libffi-dev libssl-dev
+  sudo pip install requests[security]```
