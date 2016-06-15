@@ -16,7 +16,10 @@ def get_subclasses(mod,cls):
 		if hasattr(obj, "__bases__") and cls in obj.__bases__:
 			return obj
 
-
+try:
+	os.chdir(os.path.dirname(sys.argv[0]))
+except:
+	pass
 if not os.path.isfile('sensors.cfg'):
 	print "Unable to access config file: sensors.cfg"
 	exit(1)
@@ -172,32 +175,32 @@ redPin = mainConfig.getint("Main","redPin")
 greenPin = mainConfig.getint("Main","greenPin")
 GPIO.setup(redPin,GPIO.OUT,initial=GPIO.LOW)
 GPIO.setup(greenPin,GPIO.OUT,initial=GPIO.LOW)
-while True:
-	curTime = time.time()
-	if (curTime-lastUpdated)>delayTime:
-		lastUpdated = curTime
-		data = []
-		#Collect the data from each sensor
-		for i in sensorPlugins:
-			dataDict = {}
-			val = i.getVal()
-			if val==None: #this means it has no data to upload.
-				continue
-			dataDict["value"] = i.getVal()
-			dataDict["unit"] = i.valUnit
-			dataDict["symbol"] = i.valSymbol
-			dataDict["name"] = i.valName
-			dataDict["sensor"] = i.sensorName
-			data.append(dataDict)
-		working = True
-		for i in outputPlugins:
-			working = working and i.outputData(data)
-		if working:
-			print "Uploaded successfully"
-			GPIO.output(greenPin,GPIO.HIGH)
-		else:
-			print "Failed to upload"
-			GPIO.output(redPin,GPIO.HIGH)
-		time.sleep(1)
-		GPIO.output(greenPin,GPIO.LOW)
-		GPIO.output(redPin,GPIO.LOW)
+# while True:
+curTime = time.time()
+if (curTime-lastUpdated)>delayTime:
+	lastUpdated = curTime
+	data = []
+	#Collect the data from each sensor
+	for i in sensorPlugins:
+		dataDict = {}
+		val = i.getVal()
+		if val==None: #this means it has no data to upload.
+			continue
+		dataDict["value"] = i.getVal()
+		dataDict["unit"] = i.valUnit
+		dataDict["symbol"] = i.valSymbol
+		dataDict["name"] = i.valName
+		dataDict["sensor"] = i.sensorName
+		data.append(dataDict)
+	working = True
+	for i in outputPlugins:
+		working = working and i.outputData(data)
+	if working:
+		print "Uploaded successfully"
+		GPIO.output(greenPin,GPIO.HIGH)
+	else:
+		print "Failed to upload"
+		GPIO.output(redPin,GPIO.HIGH)
+	time.sleep(1)
+	GPIO.output(greenPin,GPIO.LOW)
+	GPIO.output(redPin,GPIO.LOW)
